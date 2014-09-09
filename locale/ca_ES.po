@@ -1,0 +1,410 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:truck.order:"
+msgid "Product \"%(product)s\" of vehicle %(vehicle)s misses a revenue account."
+msgstr ""
+"Falta al compta d'ingresos del producte \"%(product)s\" del  vehicle "
+"\"%(vehicle)s\" ."
+
+msgctxt "error:truck.order:"
+msgid "There is no Truck Order sequence. Please define one in configuration."
+msgstr ""
+"No hi ha cap seqüencia per les ordres de camió. Siusplau, configureu-n'hi "
+"una a la configuració"
+
+msgctxt "error:truck.order:"
+msgid "Truck Order \"%s\" must be cancelled before deletion."
+msgstr "L'ordre de camió \"%s\" ha de ser cancel·lada abans de ser esborrada."
+
+msgctxt "field:account.invoice,traffic_taxes_amount:"
+msgid "Traffic Taxes Total"
+msgstr "Total impostos de tràfic"
+
+msgctxt "field:account.invoice.line,traffic_taxes:"
+msgid "Traffic Taxes"
+msgstr "Impostos de tràfic"
+
+msgctxt "field:party.party,projects:"
+msgid "Projects"
+msgstr "Projecte"
+
+msgctxt "field:party.project,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:party.project,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:party.project,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:party.project,invoice_address:"
+msgid "Invoice Address"
+msgstr "Adreça de factura"
+
+msgctxt "field:party.project,name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:party.project,party:"
+msgid "Party"
+msgstr "Tercer"
+
+msgctxt "field:party.project,rec_name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:party.project,write_date:"
+msgid "Write Date"
+msgstr "Data modificació"
+
+msgctxt "field:party.project,write_uid:"
+msgid "Write User"
+msgstr "Usuari modificació"
+
+msgctxt "field:truck.configuration,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:truck.configuration,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:truck.configuration,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:truck.configuration,order_sequence:"
+msgid "Order Sequence"
+msgstr "Seqüencia ordres"
+
+msgctxt "field:truck.configuration,rec_name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:truck.configuration,write_date:"
+msgid "Write Date"
+msgstr "Data modificació"
+
+msgctxt "field:truck.configuration,write_uid:"
+msgid "Write User"
+msgstr "Usuari modificació"
+
+msgctxt "field:truck.configuration.company,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:truck.configuration.company,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:truck.configuration.company,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:truck.configuration.company,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:truck.configuration.company,order_sequence:"
+msgid "Order Sequence"
+msgstr "Seqüencia ordres"
+
+msgctxt "field:truck.configuration.company,rec_name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:truck.configuration.company,write_date:"
+msgid "Write Date"
+msgstr "Data modificació"
+
+msgctxt "field:truck.configuration.company,write_uid:"
+msgid "Write User"
+msgstr "Usuari modificació"
+
+msgctxt "field:truck.order,code:"
+msgid "Code"
+msgstr "Codi"
+
+msgctxt "field:truck.order,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:truck.order,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:truck.order,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:truck.order,currency_digits:"
+msgid "Currency Digits"
+msgstr "Dígits de la moneda"
+
+msgctxt "field:truck.order,delivery_address:"
+msgid "Delivery Address"
+msgstr "Adreça d'enviament"
+
+msgctxt "field:truck.order,discount:"
+msgid "Discount"
+msgstr "Descompte"
+
+msgctxt "field:truck.order,driver:"
+msgid "Driver"
+msgstr "Conductor"
+
+msgctxt "field:truck.order,end_time:"
+msgid "End Date"
+msgstr "Data final"
+
+msgctxt "field:truck.order,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:truck.order,invoice_address:"
+msgid "Invoice Address"
+msgstr "Adreça de factura"
+
+msgctxt "field:truck.order,invoices:"
+msgid "Invoices"
+msgstr "Factures"
+
+msgctxt "field:truck.order,notes:"
+msgid "Notes"
+msgstr "Notes"
+
+msgctxt "field:truck.order,order_date:"
+msgid "Order Date"
+msgstr "Data ordre"
+
+msgctxt "field:truck.order,party:"
+msgid "Customer"
+msgstr "Client"
+
+msgctxt "field:truck.order,payment_term:"
+msgid "Payment Term"
+msgstr "Termini de pagament"
+
+msgctxt "field:truck.order,project:"
+msgid "Project"
+msgstr "Projecte"
+
+msgctxt "field:truck.order,quantity:"
+msgid "Quantity"
+msgstr "Quantitat"
+
+msgctxt "field:truck.order,rec_name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:truck.order,reference:"
+msgid "Reference"
+msgstr "Referència"
+
+msgctxt "field:truck.order,start_time:"
+msgid "Start Date"
+msgstr "Data inicial"
+
+msgctxt "field:truck.order,state:"
+msgid "State"
+msgstr "Estat"
+
+msgctxt "field:truck.order,tax:"
+msgid "Tax"
+msgstr "Impost"
+
+msgctxt "field:truck.order,tax_amount:"
+msgid "Tax"
+msgstr "Impost"
+
+msgctxt "field:truck.order,total_amount:"
+msgid "Total"
+msgstr "Total"
+
+msgctxt "field:truck.order,unit_price:"
+msgid "Unit Price"
+msgstr "Preu unitari"
+
+msgctxt "field:truck.order,untaxed_amount:"
+msgid "Untaxed"
+msgstr "Base imposable"
+
+msgctxt "field:truck.order,various:"
+msgid "Various"
+msgstr "Varis"
+
+msgctxt "field:truck.order,vehicle:"
+msgid "Vehicle"
+msgstr "Vehicle"
+
+msgctxt "field:truck.order,write_date:"
+msgid "Write Date"
+msgstr "Data modificació"
+
+msgctxt "field:truck.order,write_uid:"
+msgid "Write User"
+msgstr "Usuari modificació"
+
+msgctxt "model:ir.action,name:act_party_project"
+msgid "Party Projects"
+msgstr "Projectes tercer"
+
+msgctxt "model:ir.action,name:act_truck_configuration"
+msgid "Truck Configuration"
+msgstr "Configuració camions"
+
+msgctxt "model:ir.action,name:act_truck_order"
+msgid "Truck Orders"
+msgstr "Ordres camions"
+
+msgctxt "model:ir.action.act_window.domain,name:act_truck_order_domain_all"
+msgid "All"
+msgstr "Tots"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_truck_order_domain_confirmed"
+msgid "Confirmed"
+msgstr "Confirmat"
+
+msgctxt "model:ir.action.act_window.domain,name:act_truck_order_domain_draft"
+msgid "Draft"
+msgstr "Esborrany"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_truck_order_domain_processing"
+msgid "Processing"
+msgstr "Processos"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_truck_order_domain_received"
+msgid "Received"
+msgstr "Rebut"
+
+msgctxt "model:ir.sequence,name:sequence_truck_order"
+msgid "Truck Order "
+msgstr "Ordre camió"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_truck_order"
+msgid "Truck Order"
+msgstr "Ordre camió"
+
+msgctxt "model:ir.ui.menu,name:menu_truck_configuration"
+msgid "Configuration"
+msgstr "Configuració"
+
+msgctxt "model:ir.ui.menu,name:menu_truck_configuration_form"
+msgid "Truck Configuration"
+msgstr "Configuració camions"
+
+msgctxt "model:ir.ui.menu,name:menu_truck_order"
+msgid "Truck Orders"
+msgstr "Ordres camions"
+
+msgctxt "model:ir.ui.menu,name:menu_truck_service"
+msgid "Truck Services"
+msgstr "Serveis de camions"
+
+msgctxt "model:party.project,name:"
+msgid "Party Project"
+msgstr "Projecte tercer"
+
+msgctxt "model:res.group,name:group_truck_service"
+msgid "Truck Service"
+msgstr "Serveis de camions"
+
+msgctxt "model:res.group,name:group_truck_service_admin"
+msgid "Truck Service Administration"
+msgstr "Administració Serveis de camions"
+
+msgctxt "model:truck.configuration,name:"
+msgid "Truck Configuration"
+msgstr "Configuració camions"
+
+msgctxt "model:truck.configuration.company,name:"
+msgid "Truck Configuration per Company"
+msgstr "Configuració camions per companyia"
+
+msgctxt "model:truck.order,name:"
+msgid "Truck Order"
+msgstr "Ordre camió"
+
+msgctxt "selection:truck.order,state:"
+msgid "Canceled"
+msgstr "Cancel·lat"
+
+msgctxt "selection:truck.order,state:"
+msgid "Confirmed"
+msgstr "Confirmat"
+
+msgctxt "selection:truck.order,state:"
+msgid "Done"
+msgstr "Realitzat"
+
+msgctxt "selection:truck.order,state:"
+msgid "Draft"
+msgstr "Esborrany"
+
+msgctxt "selection:truck.order,state:"
+msgid "Processing"
+msgstr "Processos"
+
+msgctxt "selection:truck.order,state:"
+msgid "Recieved"
+msgstr "Rebut"
+
+msgctxt "selection:truck.order,state:"
+msgid "Refused"
+msgstr "Refusat"
+
+msgctxt "view:party.project:"
+msgid "Party Project"
+msgstr "Projecte tercer"
+
+msgctxt "view:truck.configuration:"
+msgid "Truck Configuration"
+msgstr "Configuració camions"
+
+msgctxt "view:truck.order:"
+msgid "Cancel"
+msgstr "Cancel·lat"
+
+msgctxt "view:truck.order:"
+msgid "Confirm"
+msgstr "Confirma"
+
+msgctxt "view:truck.order:"
+msgid "Done"
+msgstr "Realitzat"
+
+msgctxt "view:truck.order:"
+msgid "Draft"
+msgstr "Esborrany"
+
+msgctxt "view:truck.order:"
+msgid "Invoicing"
+msgstr "Facturació"
+
+msgctxt "view:truck.order:"
+msgid "Process"
+msgstr "Processa"
+
+msgctxt "view:truck.order:"
+msgid "Recieve"
+msgstr "Rebre"
+
+msgctxt "view:truck.order:"
+msgid "Refuse"
+msgstr "Refusar"
+
+msgctxt "view:truck.order:"
+msgid "Totals"
+msgstr "Totals"
+
+msgctxt "view:truck.order:"
+msgid "Truck Orders"
+msgstr "Ordres camions"

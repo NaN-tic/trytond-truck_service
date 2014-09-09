@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="truck_configuration_view_form">
+            <field name="model">truck.configuration</field>
+            <field name="type">form</field>
+            <field name="name">truck_configuration_form</field>
+        </record>
+        <record model="ir.action.act_window" id="act_truck_configuration">
+            <field name="name">Truck Configuration</field>
+            <field name="res_model">truck.configuration</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_truck_configuration_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="truck_configuration_view_form"/>
+            <field name="act_window" ref="act_truck_configuration"/>
+        </record>
+        <record model="ir.model.access" id="access_truck_configuration">
+            <field name="model" search="[('model', '=', 'truck.configuration')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_truck_configuration_admin">
+            <field name="model" search="[('model', '=', 'truck.configuration')]"/>
+            <field name="group" ref="group_truck_service_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+        <!-- Menus -->
+          <menuitem  id="menu_truck_configuration"
+              parent="menu_truck_service" sequence="10" name="Configuration"/>
+
+          <record model="ir.ui.menu-res.group"
+              id="menu_truck_configuration_group_truck_service_admin">
+            <field name="menu" ref="menu_truck_configuration"/>
+            <field name="group" ref="group_truck_service_admin"/>
+          </record>
+
+          <menuitem action="act_truck_configuration"
+              id="menu_truck_configuration_form"
+              parent="menu_truck_configuration" sequence="10"/>
+
+        <record model="ir.sequence.type" id="sequence_type_truck_order">
+            <field name="name">Truck Order</field>
+            <field name="code">truck.order</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="sequence_type_truck_order_group_admin">
+            <field name="sequence_type" ref="sequence_type_truck_order"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="sequence_type_truck_order_group_stock_admin">
+            <field name="sequence_type" ref="sequence_type_truck_order"/>
+            <field name="group" ref="group_truck_service_admin"/>
+        </record>
+
+        <record model="ir.sequence" id="sequence_truck_order">
+                <field name="name">Truck Order</field>
+                <field name="code">truck.order</field>
+        </record>
+    </data>
+</tryton>

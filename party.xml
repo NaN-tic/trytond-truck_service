@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="party_project_view_form">
+            <field name="model">party.project</field>
+            <field name="type">form</field>
+            <field name="name">party_project_form</field>
+        </record>
+        <record model="ir.ui.view" id="party_project_view_list">
+            <field name="model">party.project</field>
+            <field name="type">tree</field>
+            <field name="name">party_project_list</field>
+        </record>
+        <record model="ir.action.act_window" id="act_party_project">
+            <field name="name">Party Projects</field>
+            <field name="res_model">party.project</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_party_project_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="party_project_view_list"/>
+            <field name="act_window" ref="act_party_project"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_party_project_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="party_project_view_form"/>
+            <field name="act_window" ref="act_party_project"/>
+        </record>
+        <record model="ir.ui.view" id="party_party_view_form">
+            <field name="model">party.party</field>
+            <field name="type">form</field>
+            <field name="inherit" ref="party.party_view_form"/>
+            <field name="name">party_party_form</field>
+        </record>
+    </data>
+</tryton>

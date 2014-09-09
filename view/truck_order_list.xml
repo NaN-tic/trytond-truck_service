@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<tree string="Truck Orders">
+    <field name="company"/>
+    <field name="code"/>
+    <field name="reference"/>
+    <field name="party"/>
+    <field name="project"/>
+    <field name="order_date"/>
+    <field name="driver"/>
+    <field name="state"/>
+</tree>

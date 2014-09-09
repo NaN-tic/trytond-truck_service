@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='invoice']//label[@name='total_amount']"
+        position="before">
+        <label name="traffic_taxes_amount" xalign="1.0" xexpand="1"/>
+        <field name="traffic_taxes_amount" xalign="1.0" xexpand="0"/>
+    </xpath>
+</data>
