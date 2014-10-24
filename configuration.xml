@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tryton>
     <data>
-
         <record model="ir.ui.view" id="truck_configuration_view_form">
             <field name="model">truck.configuration</field>
             <field name="type">form</field>
@@ -33,19 +32,20 @@
         </record>
 
         <!-- Menus -->
-          <menuitem  id="menu_truck_configuration"
-              parent="menu_truck_service" sequence="10" name="Configuration"/>
+        <menuitem  id="menu_truck_configuration"
+            parent="menu_truck_service" sequence="10" name="Configuration"/>
 
-          <record model="ir.ui.menu-res.group"
-              id="menu_truck_configuration_group_truck_service_admin">
+        <record model="ir.ui.menu-res.group"
+                id="menu_truck_configuration_group_truck_service_admin">
             <field name="menu" ref="menu_truck_configuration"/>
             <field name="group" ref="group_truck_service_admin"/>
-          </record>
+        </record>
 
-          <menuitem action="act_truck_configuration"
-              id="menu_truck_configuration_form"
-              parent="menu_truck_configuration" sequence="10"/>
+        <menuitem id="menu_truck_configuration_form"
+            action="act_truck_configuration" icon="tryton-list"
+            parent="menu_truck_configuration" sequence="10"/>
 
+        <!-- sequences -->
         <record model="ir.sequence.type" id="sequence_type_truck_order">
             <field name="name">Truck Order</field>
             <field name="code">truck.order</field>
