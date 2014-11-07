@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# The COPYRIGHT file at the top level of this repository contains the full
+# copyright notices and license terms.
 from decimal import Decimal
 from sql.aggregate import Sum
 from sql.conditionals import Coalesce
@@ -16,7 +16,11 @@ __metaclass__ = PoolMeta
 
 _STATES = {
     'readonly': Eval('state') != 'draft',
-}
+    }
+_STATES_REQUIRED = {
+    'readonly': Eval('state') != 'draft',
+    'required': ~Eval('state').in_(['draft', 'refused', 'cancelled']),
+    }
 _DEPENDS = ['state']
 
 
@@ -59,13 +63,13 @@ class Order(Workflow, ModelSQL, ModelView):
         depends=_DEPENDS)
     start_time = fields.DateTime('Start Date',
         states={
-            'required': Eval('state') == 'processing',
+            'required': Eval('state').in_(['processing', 'recieved', 'done']),
             'readonly': ~Eval('state').in_(['draft', 'confirmed']),
             },
         depends=_DEPENDS)
     end_time = fields.DateTime('End Date',
         states={
-            'required': Eval('state') == 'recieved',
+            'required': Eval('state').in_(['recieved', 'done']),
             'readonly': ~Eval('state').in_(['draft', 'confirmed',
                     'processing']),
             },
@@ -96,17 +100,19 @@ class Order(Workflow, ModelSQL, ModelView):
                 ('group.kind', 'in', ['sale', 'both'])
                 ],
             ],
-        states=_STATES, depends=_DEPENDS)
+        states=_STATES_REQUIRED, depends=_DEPENDS)
     untaxed_amount = fields.Function(fields.Numeric('Untaxed',
             digits=(16, Eval('currency_digits', 2)),
             depends=['currency_digits']),
-        'get_amount', searcher='search_untaxed_amount')
+        'get_amount')
     tax_amount = fields.Function(fields.Numeric('Tax', digits=(16,
                 Eval('currency_digits', 2)), depends=['currency_digits']),
-        'get_amount', searcher='search_tax_amount')
+        'get_amount')
     total_amount = fields.Function(fields.Numeric('Total', digits=(16,
                 Eval('currency_digits', 2)), depends=['currency_digits']),
-        'get_amount', searcher='search_total_amount')
+        'get_amount')
+    invoice_lines = fields.One2Many('account.invoice.line', 'origin',
+        'Invoice Lines', readonly=True)
     invoices = fields.Function(fields.One2Many('account.invoice', None,
             'Invoices'),
         'get_invoices')
@@ -229,7 +235,7 @@ class Order(Workflow, ModelSQL, ModelView):
         if self.party:
             invoice_address = self.party.address_get(type='invoice')
             try:
-                #Delivery address may not exist
+                # Delivery address may not exist
                 delivery_address = self.party.address_get(type='delivery')
             except AttributeError:
                 delivery_address = self.party.address_get()
@@ -311,15 +317,17 @@ class Order(Workflow, ModelSQL, ModelView):
     def get_invoices(cls, orders, name):
         pool = Pool()
         InvoiceLine = pool.get('account.invoice.line')
-        result = {}.fromkeys([o.id for o in orders], [])
         lines = InvoiceLine.search([
                 ('origin.id', 'in', [o.id for o in orders], 'truck.order'),
                 ])
 
+        result = {}
+        for order in orders:
+            result[order.id] = []
         for line in lines:
             order = line.origin.id
             invoice = line.invoice.id
-            if not invoice in result[order]:
+            if invoice not in result[order]:
                 result[order].append(invoice)
         return result
 

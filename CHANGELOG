@@ -1,2 +1,12 @@
+* Tax required in non-draft (nor cancelled or refused) states
+* Avoid list reference error on dictionary initialization in get_invoices()
+  method
+* Add new field invoice_lines in Truck Orders to make easier search by invoice
+* Remove unimplemented searchers for untaxed/tax/total_amount fields
+* Set correct icon to configuration menu item
+
 Version 3.4.0 - 2014-11-03
+
+Version 3.2.0 - 2014-09-09
+
 * Initial release
