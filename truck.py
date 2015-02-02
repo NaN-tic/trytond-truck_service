@@ -76,7 +76,7 @@ class Order(Workflow, ModelSQL, ModelView):
         depends=_DEPENDS)
     notes = fields.Text('Notes', required=True, states=_STATES,
         depends=_DEPENDS)
-    vehicle = fields.Many2One('asset.vehicle', 'Vehicle', required=True,
+    vehicle = fields.Many2One('asset', 'Vehicle', required=True,
         states=_STATES, depends=_DEPENDS)
     driver = fields.Many2One('company.employee', 'Driver',
         states=_STATES, depends=_DEPENDS)
