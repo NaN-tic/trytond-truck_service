@@ -77,6 +77,12 @@ class Order(Workflow, ModelSQL, ModelView):
     notes = fields.Text('Notes', required=True, states=_STATES,
         depends=_DEPENDS)
     vehicle = fields.Many2One('asset', 'Vehicle', required=True,
+        domain=[
+            ('type', '=', 'vehicle'),
+            ],
+        context={
+            'type': 'vehicle',
+            },
         states=_STATES, depends=_DEPENDS)
     driver = fields.Many2One('company.employee', 'Driver',
         states=_STATES, depends=_DEPENDS)
@@ -269,8 +275,8 @@ class Order(Workflow, ModelSQL, ModelView):
     @fields.depends('vehicle')
     def on_change_vehicle(self):
         changes = {}
-        if self.vehicle:
-            product = self.vehicle.asset.product
+        if self.vehicle and self.vehicle.product:
+            product = self.vehicle.product
             changes['unit_price'] = product.list_price
             if product.customer_taxes:
                 changes['tax'] = product.customer_taxes[0].id
@@ -288,11 +294,16 @@ class Order(Workflow, ModelSQL, ModelView):
         tax_amount = {}.fromkeys([o.id for o in orders], Decimal('0.0'))
         total_amount = {}.fromkeys([o.id for o in orders], Decimal('0.0'))
         for order in orders:
-            gross = (Decimal(str(order.quantity or 0.0)) * order.unit_price
+            unit_price = order.unit_price or Decimal(0)
+            gross = (Decimal(str(order.quantity or 0.0)) * unit_price
                 + order.various)
             untaxed = gross - (order.discount * gross / 100)
             if order.tax:
-                val, = Tax.compute([order.tax], untaxed, 1.0)
+                vals = Tax.compute([order.tax], untaxed, 1.0)
+                if vals:
+                    val, = vals
+                else:
+                    val = {'amount': Decimal('0.0')}
             else:
                 val = {'amount': Decimal('0.0')}
             tax_amount[order.id] = Decimal(val['amount']).quantize(
@@ -360,21 +371,24 @@ class Order(Workflow, ModelSQL, ModelView):
         invoice_line.description = self.notes or ''
         invoice_line.party = self.party
         invoice_line.quantity = 1.0
+        unit_price = self.unit_price or Decimal(0)
         invoice_line.gross_unit_price = (Decimal(str(self.quantity or 0.0)) *
-            self.unit_price + self.various)
+            unit_price + self.various)
         invoice_line.discount = self.discount * Decimal('.01')
         invoice_line.unit_price = invoice_line.update_prices()['unit_price']
         invoice_line.traffic_taxes = self.traffic_taxes
         invoice_line.origin = self
 
-        product = self.vehicle.asset.product
-        invoice_line.product = product
-        invoice_line.unit = product.default_uom
-        invoice_line.account = product.account_revenue_used
+        product = self.vehicle.product
+        invoice_line.account = None
+        if product:
+            invoice_line.product = product
+            invoice_line.unit = product.default_uom
+            invoice_line.account = product.account_revenue_used
         if not invoice_line.account:
             self.raise_user_error('missing_account_revenue', {
                     'vehicle': self.vehicle.rec_name,
-                    'product': product.rec_name,
+                    'product': product.rec_name if product else '',
                     })
         invoice_line.taxes = [self.tax]
         invoice.lines = [invoice_line]
