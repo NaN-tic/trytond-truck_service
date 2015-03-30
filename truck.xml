@@ -48,37 +48,16 @@
             <field name="act_window" ref="act_truck_order"/>
         </record>
         <record model="ir.action.act_window.domain"
-                id="act_truck_order_domain_draft">
-            <field name="name">Draft</field>
-            <field name="sequence" eval="10"/>
-            <field name="domain">[('state', '=', 'draft')]</field>
-            <field name="act_window" ref="act_truck_order"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                id="act_truck_order_domain_confirmed">
-            <field name="name">Confirmed</field>
-            <field name="sequence" eval="20"/>
-            <field name="domain">[('state', '=', 'confirmed')]</field>
-            <field name="act_window" ref="act_truck_order"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                id="act_truck_order_domain_processing">
-            <field name="name">Processing</field>
-            <field name="sequence" eval="30"/>
-            <field name="domain">[('state', '=', 'processing')]</field>
-            <field name="act_window" ref="act_truck_order"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                id="act_truck_order_domain_received">
-            <field name="name">Recieved</field>
-            <field name="sequence" eval="40"/>
-            <field name="domain">[('state', '=', 'recieved')]</field>
-            <field name="act_window" ref="act_truck_order"/>
-        </record>
-        <record model="ir.action.act_window.domain"
                 id="act_truck_order_domain_all">
             <field name="name">All</field>
-            <field name="sequence" eval="9999"/>
+            <field name="sequence" eval="10"/>
+            <field name="act_window" ref="act_truck_order"/>
+        </record>
+        <record model="ir.action.act_window.domain"
+                id="act_truck_order_domain_invoiced">
+            <field name="name">Invoiced</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain">[('state', '=', 'done'), ('invoiced', '=', True)]</field>
             <field name="act_window" ref="act_truck_order"/>
         </record>
         <record model="ir.model.access" id="access_truck_order">
@@ -138,5 +117,37 @@
 
           <menuitem action="act_truck_order" id="menu_truck_order"
               parent="menu_truck_service" sequence="20"/>
+
+
+        <!-- Wizards -->
+        <record model="ir.action.wizard" id="wizard_truck_order_invoice">
+            <field name="name">Invoice</field>
+            <field name="wiz_name">truck.order.invoice</field>
+            <field name="model">truck.order</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="act_wizard_truck_order_invoice_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">truck.order,-1</field>
+            <field name="action" ref="wizard_truck_order_invoice"/>
+        </record>
+
+        <record model="ir.ui.view" id="truck_order_invoice_existent_view_form">
+            <field name="model">truck.order.invoice.existent</field>
+            <field name="type">form</field>
+            <field name="name">truck_order_invoice_existent_view_form</field>
+        </record>
+        <record model="ir.action.wizard"
+            id="wizard_truck_order_invoice_update">
+            <field name="name">Update an Invoice</field>
+            <field name="wiz_name">truck.order.invoice.update</field>
+            <field name="model">truck.order</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="act_wizard_truck_order_invoice_update_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">truck.order,-1</field>
+            <field name="action" ref="wizard_truck_order_invoice_update"/>
+        </record>
     </data>
 </tryton>

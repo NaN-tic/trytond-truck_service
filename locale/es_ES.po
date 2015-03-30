@@ -9,6 +9,14 @@ msgstr ""
 "\"%(vehicle)s\"."
 
 msgctxt "error:truck.order:"
+msgid "The order %s could not be invoiced because are not done."
+msgstr "El albarán %s no puede ser facturado porque no esta validado."
+
+msgctxt "error:truck.order:"
+msgid "The order %s is already invoiced."
+msgstr "El albarán %s está ya facturado."
+
+msgctxt "error:truck.order:"
 msgid "There is no Truck Order sequence. Please define one in configuration."
 msgstr ""
 "No se ha definido una secuencia para las ordenes de camiones. Por favor, "
@@ -16,7 +24,11 @@ msgstr ""
 
 msgctxt "error:truck.order:"
 msgid "Truck Order \"%s\" must be cancelled before deletion."
-msgstr ""
+msgstr "El albarán \"%s\" ha de ser cancelado antes de elimnarlo."
+
+msgctxt "error:truck.order:"
+msgid "Trying to create an invoice with orders from differnts parties."
+msgstr "Intentando crear una factura con ordendes de distintos terceros."
 
 msgctxt "field:account.invoice,traffic_taxes_amount:"
 msgid "Traffic Taxes Total"
@@ -170,6 +182,14 @@ msgctxt "field:truck.order,invoice_address:"
 msgid "Invoice Address"
 msgstr "Dirección de facturación"
 
+msgctxt "field:truck.order,invoice_lines:"
+msgid "Invoice Lines"
+msgstr "Líneas de factura"
+
+msgctxt "field:truck.order,invoiced:"
+msgid "Invoiced"
+msgstr "Facturados"
+
 msgctxt "field:truck.order,invoices:"
 msgid "Invoices"
 msgstr "Facturas"
@@ -204,7 +224,7 @@ msgstr "Nombre"
 
 msgctxt "field:truck.order,reference:"
 msgid "Reference"
-msgstr "Referencia"
+msgstr "Nº Albarán"
 
 msgctxt "field:truck.order,start_time:"
 msgid "Start Date"
@@ -226,6 +246,10 @@ msgctxt "field:truck.order,total_amount:"
 msgid "Total"
 msgstr "Total"
 
+msgctxt "field:truck.order,traffic_taxes:"
+msgid "Traffic Taxes"
+msgstr "Impuestos trafico"
+
 msgctxt "field:truck.order,unit_price:"
 msgid "Unit Price"
 msgstr "Precio unidad"
@@ -233,10 +257,6 @@ msgstr "Precio unidad"
 msgctxt "field:truck.order,untaxed_amount:"
 msgid "Untaxed"
 msgstr "Base imponible"
-
-msgctxt "field:truck.order,various:"
-msgid "Various"
-msgstr "Varios"
 
 msgctxt "field:truck.order,vehicle:"
 msgid "Vehicle"
@@ -250,48 +270,54 @@ msgctxt "field:truck.order,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
+msgctxt "field:truck.order.invoice.existent,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:truck.order.invoice.existent,invoice:"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "field:truck.order.invoice.existent,party:"
+msgid "Party"
+msgstr "Terceros"
+
 msgctxt "model:ir.action,name:act_party_project"
 msgid "Party Projects"
 msgstr "Proyectos de tercero"
 
 msgctxt "model:ir.action,name:act_truck_configuration"
 msgid "Truck Configuration"
-msgstr "Configuración camiones"
+msgstr "Configuración albaranes"
 
 msgctxt "model:ir.action,name:act_truck_order"
 msgid "Truck Orders"
-msgstr "Ordenes de camiones"
+msgstr "Albaranes"
+
+msgctxt "model:ir.action,name:wizard_truck_order_invoice"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "model:ir.action,name:wizard_truck_order_invoice_update"
+msgid "Update Invoice"
+msgstr "Actualizar factura"
 
 msgctxt "model:ir.action.act_window.domain,name:act_truck_order_domain_all"
 msgid "All"
 msgstr "Todos"
 
 msgctxt ""
-"model:ir.action.act_window.domain,name:act_truck_order_domain_confirmed"
-msgid "Confirmed"
-msgstr "Confirmado"
-
-msgctxt "model:ir.action.act_window.domain,name:act_truck_order_domain_draft"
-msgid "Draft"
-msgstr "Borrador"
-
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_truck_order_domain_processing"
-msgid "Processing"
-msgstr "Procesos"
-
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_truck_order_domain_received"
-msgid "Received"
-msgstr "Recibido"
+"model:ir.action.act_window.domain,name:act_truck_order_domain_invoiced"
+msgid "Invoiced"
+msgstr "Facturado"
 
 msgctxt "model:ir.sequence,name:sequence_truck_order"
-msgid "Truck Order "
-msgstr "Orden de camión"
+msgid "Truck Order"
+msgstr "Alabrán"
 
 msgctxt "model:ir.sequence.type,name:sequence_type_truck_order"
 msgid "Truck Order"
-msgstr "Orden de camión"
+msgstr "Alabrán"
 
 msgctxt "model:ir.ui.menu,name:menu_truck_configuration"
 msgid "Configuration"
@@ -299,15 +325,15 @@ msgstr "Configuración"
 
 msgctxt "model:ir.ui.menu,name:menu_truck_configuration_form"
 msgid "Truck Configuration"
-msgstr "Configuración camiones"
+msgstr "Configuración albaranes"
 
 msgctxt "model:ir.ui.menu,name:menu_truck_order"
 msgid "Truck Orders"
-msgstr "Ordenes de camiones"
+msgstr "Albaranes"
 
 msgctxt "model:ir.ui.menu,name:menu_truck_service"
 msgid "Truck Services"
-msgstr "Serivicios de camiones"
+msgstr "Albaranes"
 
 msgctxt "model:party.project,name:"
 msgid "Party Project"
@@ -315,15 +341,15 @@ msgstr "Proyecto de tercero"
 
 msgctxt "model:res.group,name:group_truck_service"
 msgid "Truck Service"
-msgstr "Serivicios de camiones"
+msgstr "Albaranes"
 
 msgctxt "model:res.group,name:group_truck_service_admin"
 msgid "Truck Service Administration"
-msgstr "Adminitración de serivicios de camiones"
+msgstr "Adminitración de serivicios de albaranes"
 
 msgctxt "model:truck.configuration,name:"
 msgid "Truck Configuration"
-msgstr "Configuración camiones"
+msgstr "Configuración albaranes"
 
 msgctxt "model:truck.configuration.company,name:"
 msgid "Truck Configuration per Company"
@@ -331,15 +357,11 @@ msgstr "Configuración camiones por empresa"
 
 msgctxt "model:truck.order,name:"
 msgid "Truck Order"
-msgstr "Orden de camión"
+msgstr "Alabrán"
 
-msgctxt "selection:truck.order,state:"
-msgid "Canceled"
-msgstr "Cancelado"
-
-msgctxt "selection:truck.order,state:"
-msgid "Confirmed"
-msgstr "Confirmado"
+msgctxt "model:truck.order.invoice.existent,name:"
+msgid "Existent Invoice"
+msgstr "Factura existeinte"
 
 msgctxt "selection:truck.order,state:"
 msgid "Done"
@@ -348,18 +370,6 @@ msgstr "Realizado"
 msgctxt "selection:truck.order,state:"
 msgid "Draft"
 msgstr "Borrador"
-
-msgctxt "selection:truck.order,state:"
-msgid "Processing"
-msgstr "Procesos"
-
-msgctxt "selection:truck.order,state:"
-msgid "Recieved"
-msgstr "Recibido"
-
-msgctxt "selection:truck.order,state:"
-msgid "Refused"
-msgstr "Refusado"
 
 msgctxt "view:party.project:"
 msgid "Party Project"
@@ -367,15 +377,11 @@ msgstr "Proyecto de tercero"
 
 msgctxt "view:truck.configuration:"
 msgid "Truck Configuration"
-msgstr "Configuración camiones"
+msgstr "Configuración albaranes"
 
-msgctxt "view:truck.order:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "view:truck.order:"
-msgid "Confirm"
-msgstr "Confirmar"
+msgctxt "view:truck.order.invoice.existent:"
+msgid "Existent Invoices"
+msgstr "Facturas existentes"
 
 msgctxt "view:truck.order:"
 msgid "Done"
@@ -386,25 +392,21 @@ msgid "Draft"
 msgstr "Borrador"
 
 msgctxt "view:truck.order:"
-msgid "Invoicing"
-msgstr "Facturación"
-
-msgctxt "view:truck.order:"
-msgid "Process"
-msgstr "Procesar"
-
-msgctxt "view:truck.order:"
-msgid "Recieve"
-msgstr "Recibir"
-
-msgctxt "view:truck.order:"
-msgid "Refuse"
-msgstr "Refusar"
-
-msgctxt "view:truck.order:"
 msgid "Totals"
 msgstr "Totales"
 
 msgctxt "view:truck.order:"
+msgid "Truck Order"
+msgstr "Albaranes"
+
+msgctxt "view:truck.order:"
 msgid "Truck Orders"
-msgstr "Ordenes de camiones"
+msgstr "Albaranes"
+
+msgctxt "wizard_button:truck.order.invoice.update,start,add:"
+msgid "Add"
+msgstr "Añadir"
+
+msgctxt "wizard_button:truck.order.invoice.update,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"

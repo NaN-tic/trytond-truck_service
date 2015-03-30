@@ -1,19 +1,15 @@
 <?xml version="1.0"?>
 <!-- The COPYRIGHT file at the top level of this repository contains the full
      copyright notices and license terms. -->
-<form string="Truck 6rder">
+<form string="Truck Order">
     <label name="reference"/>
     <field name="reference"/>
-    <label name="code"/>
-    <field name="code"/>
     <label name="party"/>
     <field name="party"/>
     <label name="delivery_address"/>
     <field name="delivery_address"/>
-    <label name="project"/>
-    <field name="project"/>
-    <label name="company"/>
-    <field name="company"/>
+    <label name="invoice_address"/>
+    <field name="invoice_address"/>
     <label name="vehicle"/>
     <field name="vehicle"/>
     <label name="driver"/>
@@ -29,48 +25,41 @@
     <notebook>
         <page name="notes">
             <field name="notes" colspan="4"/>
-        </page>
-        <page id="invoicing" string="Invoicing">
-            <label name="invoice_address"/>
-            <field name="invoice_address"/>
-            <label name="payment_term"/>
-            <field name="payment_term"/>
-            <label name="quantity"/>
-            <field name="quantity"/>
-            <label name="unit_price"/>
-            <field name="unit_price"/>
-            <label name="discount"/>
-            <field name="discount"/>
-            <label name="various"/>
-            <field name="various"/>
-            <label name="tax"/>
-            <field name="tax"/>
-            <separator id="totals" string="Totals" colspan="4"/>
-            <group id="amounts" colspan="4" col="6">
-                <label name="untaxed_amount"/>
-                <field name="untaxed_amount"/>
-                <label name="tax_amount"/>
-                <field name="tax_amount"/>
-                <label name="total_amount"/>
-                <field name="total_amount"/>
+            <group id="invoicing" colspan="4" col="4">
+                <label name="payment_term"/>
+                <field name="payment_term"/>
+                <label name="quantity"/>
+                <field name="quantity"/>
+                <label name="unit_price"/>
+                <field name="unit_price"/>
+                <label name="discount"/>
+                <field name="discount"/>
+                <label name="traffic_taxes"/>
+                <field name="traffic_taxes"/>
+                <label name="tax"/>
+                <field name="tax"/>
+                <separator id="totals" string="Totals" colspan="4"/>
+                <group id="amounts" colspan="4" col="6">
+                    <label name="untaxed_amount"/>
+                    <field name="untaxed_amount"/>
+                    <label name="tax_amount"/>
+                    <field name="tax_amount"/>
+                    <label name="total_amount"/>
+                    <field name="total_amount"/>
+                </group>
             </group>
         </page>
         <page name="invoices">
             <field name="invoices" colspan="4"/>
         </page>
     </notebook>
-    <group col="2" colspan="4" id="state_buttons">
+    <group col="4" colspan="4" id="state_buttons">
         <group col="2" colspan="2" id="state">
             <label name="state"/>
             <field name="state"/>
         </group>
-        <group col="6" colspan="2" id="buttons">
-            <button name="cancel" string="Cancel"/>
+        <group col="2" colspan="2" id="buttons">
             <button name="draft" string="Draft"/>
-            <button name="confirm" string="Confirm"/>
-            <button name="process" string="Process"/>
-            <button name="recieve" string="Recieve"/>
-            <button name="refuse" string="Refuse"/>
             <button name="done" string="Done"/>
         </group>
     </group>

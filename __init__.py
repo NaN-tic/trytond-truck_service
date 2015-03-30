@@ -15,4 +15,9 @@ def register():
         Order,
         Invoice,
         InvoiceLine,
+        ExistentInvoice,
         module='truck_service', type_='model')
+    Pool.register(
+        OrderInvoice,
+        UpdateOrderInvoice,
+        module='truck_service', type_='wizard')

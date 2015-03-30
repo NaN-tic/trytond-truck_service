@@ -3,14 +3,18 @@
 from decimal import Decimal
 from sql.aggregate import Sum
 from sql.conditionals import Coalesce
+from sql import Cast, Literal
+from sql.functions import Substring, Position
 
 from trytond.pool import Pool, PoolMeta
 from trytond.model import Workflow, ModelSQL, ModelView, fields
+from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pyson import Eval, If, In
 from trytond.tools import reduce_ids
 from trytond.transaction import Transaction
 
-__all__ = ['Order', 'Invoice', 'InvoiceLine']
+__all__ = ['Order', 'Invoice', 'InvoiceLine', 'OrderInvoice',
+    'ExistentInvoice', 'UpdateOrderInvoice']
 __metaclass__ = PoolMeta
 
 
@@ -18,8 +22,8 @@ _STATES = {
     'readonly': Eval('state') != 'draft',
     }
 _STATES_REQUIRED = {
-    'readonly': Eval('state') != 'draft',
-    'required': ~Eval('state').in_(['draft', 'refused', 'cancelled']),
+    'readonly': ~Eval('state').in_(['draft']),
+    'required': Eval('state').in_(['draft']),
     }
 _DEPENDS = ['state']
 
@@ -56,24 +60,14 @@ class Order(Workflow, ModelSQL, ModelView):
     delivery_address = fields.Many2One('party.address',
         'Delivery Address', required=True,
         domain=[
-            ('party', '=', Eval('party'))
+            ('party', '=', Eval('party')),
+            ('delivery', '=', True),
             ],
         states=_STATES, depends=_DEPENDS + ['party'])
     order_date = fields.Date('Order Date', required=True, states=_STATES,
         depends=_DEPENDS)
-    start_time = fields.DateTime('Start Date',
-        states={
-            'required': Eval('state').in_(['processing', 'recieved', 'done']),
-            'readonly': ~Eval('state').in_(['draft', 'confirmed']),
-            },
-        depends=_DEPENDS)
-    end_time = fields.DateTime('End Date',
-        states={
-            'required': Eval('state').in_(['recieved', 'done']),
-            'readonly': ~Eval('state').in_(['draft', 'confirmed',
-                    'processing']),
-            },
-        depends=_DEPENDS)
+    start_time = fields.DateTime('Start Date')
+    end_time = fields.DateTime('End Date')
     notes = fields.Text('Notes', required=True, states=_STATES,
         depends=_DEPENDS)
     vehicle = fields.Many2One('asset', 'Vehicle', required=True,
@@ -92,11 +86,9 @@ class Order(Workflow, ModelSQL, ModelView):
         states=_STATES, depends=_DEPENDS)
     unit_price = fields.Numeric('Unit Price', digits=(16, 4),
         states=_STATES, depends=_DEPENDS)
-    traffic_taxes = fields.Numeric('Trafic Taxes', digits=(16, 4),
+    traffic_taxes = fields.Numeric('Traffic Taxes', digits=(16, 4),
         states=_STATES, depends=_DEPENDS)
     discount = fields.Numeric('Discount', digits=(16, 4),
-        states=_STATES, depends=_DEPENDS)
-    various = fields.Numeric('Various', digits=(16, 4),
         states=_STATES, depends=_DEPENDS)
     tax = fields.Many2One('account.tax', 'Tax', ondelete='RESTRICT',
         domain=[
@@ -122,14 +114,11 @@ class Order(Workflow, ModelSQL, ModelView):
     invoices = fields.Function(fields.One2Many('account.invoice', None,
             'Invoices'),
         'get_invoices')
+    invoiced = fields.Function(fields.Boolean('Invoiced'), 'check_invoiced',
+        searcher='search_invoiced')
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('confirmed', 'Confirmed'),
-        ('processing', 'Processing'),
-        ('recieved', 'Recieved'),
         ('done', 'Done'),
-        ('cancel', 'Canceled'),
-        ('refused', 'Refused'),
         ], 'State', readonly=True)
 
     @classmethod
@@ -144,46 +133,24 @@ class Order(Workflow, ModelSQL, ModelView):
                     'define one in configuration.'),
                 'missing_account_revenue': ('Product "%(product)s" of vehicle'
                     ' %(vehicle)s misses a revenue account.'),
+                'not_same_party': ('Trying to create an invoice with orders '
+                    'from differnts parties.'),
+                'not_done': ('The order %s could not be invoiced because are '
+                    'not done.'),
+                'order_invoiced': ('The order %s is already invoiced.'),
                 })
         cls._transitions |= set((
-                ('draft', 'confirmed'),
-                ('confirmed', 'processing'),
-                ('processing', 'processing'),
-                ('processing', 'recieved'),
-                ('recieved', 'done'),
-                ('draft', 'cancel'),
-                ('draft', 'refused'),
-                ('confirmed', 'cancel'),
-                ('cancel', 'draft'),
+                ('draft', 'done'),
+                ('done', 'draft'),
                 ))
         cls._buttons.update({
                 'draft': {
-                    'invisible': Eval('state') != 'cancel',
+                    'invisible': Eval('state') != 'done',
                     'icon': 'tryton-clear',
                     },
-                'confirm': {
-                    'invisible': Eval('state') != 'draft',
-                    'icon': 'tryton-ok',
-                    },
-                'process': {
-                    'invisible': Eval('state') != 'confirmed',
-                    'icon': 'tryton-go-next',
-                    },
-                'recieve': {
-                    'invisible': Eval('state') != 'processing',
-                    'icon': 'tryton-ok',
-                    },
                 'done': {
-                    'invisible': Eval('state') != 'recieved',
-                    'icon': 'tryton-ok',
-                    },
-                'refuse': {
                     'invisible': Eval('state') != 'draft',
-                    'icon': 'tryton-cancel',
-                    },
-                'cancel': {
-                    'invisible': ~Eval('state').in_(['draft', 'confirmed']),
-                    'icon': 'tryton-cancel',
+                    'icon': 'tryton-ok',
                     },
                 })
 
@@ -222,10 +189,6 @@ class Order(Workflow, ModelSQL, ModelView):
         if len(payment_terms) == 1:
             return payment_terms[0].id
 
-    @staticmethod
-    def default_various():
-        return Decimal('0')
-
     @fields.depends('company')
     def on_change_with_currency_digits(self, name=None):
         if self.company:
@@ -243,8 +206,10 @@ class Order(Workflow, ModelSQL, ModelView):
             try:
                 # Delivery address may not exist
                 delivery_address = self.party.address_get(type='delivery')
+                if not delivery_address.delivery:
+                    delivery_address = None
             except AttributeError:
-                delivery_address = self.party.address_get()
+                pass
             if self.party.customer_payment_term:
                 payment_term = self.party.customer_payment_term
         if invoice_address:
@@ -295,8 +260,7 @@ class Order(Workflow, ModelSQL, ModelView):
         total_amount = {}.fromkeys([o.id for o in orders], Decimal('0.0'))
         for order in orders:
             unit_price = order.unit_price or Decimal(0)
-            gross = (Decimal(str(order.quantity or 0.0)) * unit_price
-                + order.various)
+            gross = (Decimal(str(order.quantity or 0.0)) * unit_price)
             untaxed = gross - (order.discount * gross / 100)
             if order.tax:
                 vals = Tax.compute([order.tax], untaxed, 1.0)
@@ -325,6 +289,21 @@ class Order(Workflow, ModelSQL, ModelView):
         return result
 
     @classmethod
+    def check_orders(cls, orders):
+        # Check all orders are from the same party and done and not invoiced
+        last_party = None
+        for order in orders:
+            if order.state != 'done':
+                cls.raise_user_error('not_done', (order.rec_name,))
+            if order.invoiced:
+                cls.raise_user_error('order_invoiced', (order.rec_name,))
+            party = order.party
+            if last_party is None:
+                last_party = party
+            if party.id != last_party.id:
+                cls.raise_user_error('not_same_party')
+
+    @classmethod
     def get_invoices(cls, orders, name):
         pool = Pool()
         InvoiceLine = pool.get('account.invoice.line')
@@ -342,24 +321,95 @@ class Order(Workflow, ModelSQL, ModelView):
                 result[order].append(invoice)
         return result
 
-    def create_invoice(self):
+    @classmethod
+    def check_invoiced(cls, orders, name):
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+        lines = InvoiceLine.search([
+                ('origin.id', 'in', [o.id for o in orders], 'truck.order'),
+                ])
+
+        result = {}
+        for order in orders:
+            result[order.id] = False
+        for line in lines:
+            invoice = line.invoice.id
+            if invoice:
+                result[line.origin.id] = True
+        return result
+
+    @classmethod
+    def search_invoiced(cls, name, clause):
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+
+        order = cls.__table__()
+        invoice_line = InvoiceLine.__table__()
+
+        query = order.join(invoice_line,
+            condition=(order.id == Cast(Substring(invoice_line.origin,
+                        Position(',', invoice_line.origin) + Literal(1)),
+                    InvoiceLine.id.sql_type().base))).select(order.id)
+        return [('id', 'in', query)]
+
+    @classmethod
+    def create_invoice_lines(cls, invoice, orders):
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+
+        with Transaction().set_user(0):
+            invoice_line = InvoiceLine()
+
+        for order in orders:
+            invoice_line.type = 'line'
+            invoice_line.description = order.notes or ''
+            invoice_line.party = order.party
+            invoice_line.quantity = 1.0
+            unit_price = order.unit_price or Decimal(0)
+            invoice_line.gross_unit_price = (Decimal(
+                    str(order.quantity or 0.0)) * unit_price)
+            invoice_line.discount = order.discount * Decimal('.01')
+            invoice_line.unit_price = invoice_line.update_prices()['unit_price']
+            invoice_line.traffic_taxes = order.traffic_taxes
+            invoice_line.origin = order
+
+            product = order.vehicle.product
+            invoice_line.account = None
+            if product:
+                invoice_line.product = product
+                invoice_line.unit = product.default_uom
+                invoice_line.account = product.account_revenue_used
+            if not invoice_line.account:
+                order.raise_user_error('missing_account_revenue', {
+                        'vehicle': order.vehicle.rec_name,
+                        'product': product.rec_name if product else '',
+                        })
+            invoice_line.taxes = [order.tax]
+            invoice.lines = ((list(invoice.lines)
+                    if hasattr(invoice, 'lines') else [])
+                + list([invoice_line]))
+            invoice.save()
+
+    @classmethod
+    def create_invoice(cls, orders):
         'Return the invoice to create for the given order'
         pool = Pool()
         Journal = pool.get('account.journal')
         Invoice = pool.get('account.invoice')
-        InvoiceLine = pool.get('account.invoice.line')
+
+        cls.check_orders(orders)
+
         with Transaction().set_user(0):
             invoice = Invoice()
-            invoice_line = InvoiceLine()
-        # TODO: generate invoice
-        invoice.company = self.company
-        invoice.currency = self.company.currency
+
+        invoice.company = orders[0].company
+        invoice.currency = orders[0].company.currency
         invoice.type = 'out_invoice'
-        invoice.party = self.party
+        invoice.party = orders[0].party
         for key, value in invoice.on_change_party().iteritems():
             setattr(invoice, key, value)
-        invoice.payment_term = self.payment_term
-        invoice.invoice_address = self.invoice_address
+        invoice.payment_term = orders[0].payment_term
+        invoice.invoice_address = orders[0].invoice_address
         journals = Journal.search([
                 ('type', '=', 'revenue'),
                 ], limit=1)
@@ -367,32 +417,19 @@ class Order(Workflow, ModelSQL, ModelView):
             journal, = journals
             invoice.journal = journal
 
-        invoice_line.type = 'line'
-        invoice_line.description = self.notes or ''
-        invoice_line.party = self.party
-        invoice_line.quantity = 1.0
-        unit_price = self.unit_price or Decimal(0)
-        invoice_line.gross_unit_price = (Decimal(str(self.quantity or 0.0)) *
-            unit_price + self.various)
-        invoice_line.discount = self.discount * Decimal('.01')
-        invoice_line.unit_price = invoice_line.update_prices()['unit_price']
-        invoice_line.traffic_taxes = self.traffic_taxes
-        invoice_line.origin = self
+        cls.create_invoice_lines(invoice, orders)
 
-        product = self.vehicle.product
-        invoice_line.account = None
-        if product:
-            invoice_line.product = product
-            invoice_line.unit = product.default_uom
-            invoice_line.account = product.account_revenue_used
-        if not invoice_line.account:
-            self.raise_user_error('missing_account_revenue', {
-                    'vehicle': self.vehicle.rec_name,
-                    'product': product.rec_name if product else '',
-                    })
-        invoice_line.taxes = [self.tax]
-        invoice.lines = [invoice_line]
-        invoice.save()
+        with Transaction().set_user(0, set_context=True):
+            Invoice.update_taxes([invoice])
+
+    @classmethod
+    def update_invoice(cls, orders, invoice):
+        'Add selected order to an existent invoice'
+        pool = Pool()
+        Invoice = pool.get('account.invoice')
+
+        cls.create_invoice_lines(invoice, orders)
+
         with Transaction().set_user(0, set_context=True):
             Invoice.update_taxes([invoice])
 
@@ -412,9 +449,8 @@ class Order(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def delete(cls, orders):
-        cls.cancel(orders)
-        for order in order:
-            if order.state != 'cancel':
+        for order in orders:
+            if order.state != 'draft':
                 cls.raise_user_error('delete_cancel', (order.rec_name,))
         super(Order, cls).delete(orders)
 
@@ -422,44 +458,81 @@ class Order(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('draft')
     def draft(cls, orders):
-        pass
+        for order in orders:
+            if order.invoiced:
+                cls.raise_user_error('order_invoiced', (order.rec_name,))
 
-    @classmethod
-    @ModelView.button
-    @Workflow.transition('confirmed')
-    def confirm(cls, orders):
-        pass
-
-    @classmethod
-    @ModelView.button
-    @Workflow.transition('processing')
-    def process(cls, orders):
-        pass
-
-    @classmethod
-    @ModelView.button
-    @Workflow.transition('recieved')
-    def recieve(cls, orders):
-        pass
 
     @classmethod
     @ModelView.button
     @Workflow.transition('done')
     def done(cls, orders):
-        for order in orders:
-            order.create_invoice()
-
-    @classmethod
-    @ModelView.button
-    @Workflow.transition('refused')
-    def refuse(cls, orders):
         pass
 
-    @classmethod
-    @ModelView.button
-    @Workflow.transition('cancel')
-    def cancel(cls, orders):
-        pass
+
+class OrderInvoice(Wizard):
+    'Inovice Truck Order'
+    __name__ = 'truck.order.invoice'
+
+    start_state = 'invoice'
+    invoice = StateTransition()
+
+    def transition_invoice(self):
+        pool = Pool()
+        Order = pool.get('truck.order')
+        orders = Order.browse(Transaction().context.get('active_ids'))
+        Order.create_invoice(orders)
+        return 'end'
+
+
+class ExistentInvoice(ModelView):
+    'Existent Invoice'
+    __name__ = 'truck.order.invoice.existent'
+
+    party = fields.Many2One('party.party', 'Party')
+    invoice = fields.Many2One('account.invoice', 'Invoice', required=True,
+        domain=[
+            ('party', '=', Eval('party', None)),
+            ('state', '=', 'draft'),
+            ], depends=['party'])
+
+
+class UpdateOrderInvoice(Wizard):
+    'Update Inovice Truck Order'
+    __name__ = 'truck.order.invoice.update'
+
+    start = StateView('truck.order.invoice.existent',
+        'truck_service.truck_order_invoice_existent_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Add', 'add', 'tryton-ok', default=True),
+            ])
+    add = StateTransition()
+
+    def default_start(self, fields):
+        pool = Pool()
+        Order = pool.get('truck.order')
+        Invoice = pool.get('account.invoice')
+        orders = Order.browse(Transaction().context.get('active_ids'))
+
+        Order.check_orders(orders)
+
+        party = orders[0].party
+        invoices = Invoice.search([
+                ('party', '=', party.id),
+                ('state', '=', 'draft'),
+                ])
+
+        return {
+            'party': party and party.id or None,
+            'invoice': invoices and invoices[0] and invoices[0].id or None,
+            }
+
+    def transition_add(self):
+        Order = Pool().get('truck.order')
+        orders = Transaction().context.get('active_ids')
+        invoice = self.start.invoice
+        Order.update_invoice(Order.browse(orders), invoice)
+        return 'end'
 
 
 class Invoice:
