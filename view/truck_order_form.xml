@@ -10,10 +10,14 @@
     <field name="delivery_address"/>
     <label name="invoice_address"/>
     <field name="invoice_address"/>
-    <label name="vehicle"/>
-    <field name="vehicle"/>
-    <label name="driver"/>
-    <field name="driver"/>
+    <group id="vehicle" colspan="4" col="6">
+        <label name="vehicle"/>
+        <field name="vehicle"/>
+        <label name="product"/>
+        <field name="product"/>
+        <label name="driver"/>
+        <field name="driver"/>
+    </group>
     <group id="dates_times" colspan="4" col="6">
         <label name="order_date"/>
         <field name="order_date"/>
@@ -26,8 +30,6 @@
         <page name="notes">
             <field name="notes" colspan="4"/>
             <group id="invoicing" colspan="4" col="4">
-                <label name="payment_term"/>
-                <field name="payment_term"/>
                 <label name="quantity"/>
                 <field name="quantity"/>
                 <label name="unit_price"/>
@@ -36,6 +38,8 @@
                 <field name="discount"/>
                 <label name="traffic_taxes"/>
                 <field name="traffic_taxes"/>
+                <label name="payment_term"/>
+                <field name="payment_term"/>
                 <label name="tax"/>
                 <field name="tax"/>
                 <separator id="totals" string="Totals" colspan="4"/>

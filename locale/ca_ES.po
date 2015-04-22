@@ -210,6 +210,10 @@ msgctxt "field:truck.order,payment_term:"
 msgid "Payment Term"
 msgstr "Termini de pagament"
 
+msgctxt "field:truck.order,product:"
+msgid "Vehicle Type"
+msgstr "Tipus de vehicle"
+
 msgctxt "field:truck.order,project:"
 msgid "Project"
 msgstr "Projecte"

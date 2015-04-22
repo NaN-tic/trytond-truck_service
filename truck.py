@@ -78,6 +78,8 @@ class Order(Workflow, ModelSQL, ModelView):
             'type': 'vehicle',
             },
         states=_STATES, depends=_DEPENDS)
+    product = fields.Many2One('product.product', 'Vehicle Type',
+        states=_STATES, depends=_DEPENDS)
     driver = fields.Many2One('company.employee', 'Driver',
         states=_STATES, depends=_DEPENDS)
     payment_term = fields.Many2One('account.invoice.payment_term',
@@ -237,18 +239,69 @@ class Order(Workflow, ModelSQL, ModelView):
             changes['invoice_address.rec_name'] = invoice_address.rec_name
         return changes
 
-    @fields.depends('vehicle')
+    @fields.depends('vehicle', 'unit_price', 'quantity', 'discount', 'tax',
+        'currency_digits', 'traffic_taxes')
     def on_change_vehicle(self):
         changes = {}
-        if self.vehicle and self.vehicle.product:
-            product = self.vehicle.product
-            changes['unit_price'] = product.list_price
-            if product.customer_taxes:
-                changes['tax'] = product.customer_taxes[0].id
-                changes['tax.rec_name'] = product.customer_taxes[0].rec_name
+        if self.vehicle:
+            if self.vehicle.product:
+                product = self.vehicle.product
+                changes['product'] = product.id
+                changes['product.rec_name'] = product.rec_name
+                changes['unit_price'] = product.list_price
+                if product.customer_taxes:
+                    changes['tax'] = product.customer_taxes[0].id
+                    changes['tax.rec_name'] = (
+                        product.customer_taxes[0].rec_name)
+                amount = self.get_amount([self],
+                    ['untaxed_amount', 'tax_amount', 'total_amount'])
+                changes['untaxed_amount'] = amount['untaxed_amount'][self.id]
+                changes['tax_amount'] = amount['tax_amount'][self.id]
+                changes['total_amount'] = amount['total_amount'][self.id]
             if self.vehicle.driver:
                 changes['driver'] = self.vehicle.driver.id
                 changes['driver.rec_name'] = self.vehicle.driver.rec_name
+        return changes
+
+    @fields.depends('product', 'unit_price', 'quantity', 'discount', 'tax',
+        'currency_digits', 'traffic_taxes')
+    def on_change_product(self):
+        changes = {}
+        if self.product:
+            changes['unit_price'] = self.product.list_price
+            if self.product.customer_taxes:
+                changes['tax'] = self.product.customer_taxes[0].id
+                changes['tax.rec_name'] = (
+                    self.product.customer_taxes[0].rec_name)
+            amount = self.get_amount([self],
+                ['untaxed_amount', 'tax_amount', 'total_amount'])
+            changes['untaxed_amount'] = amount['untaxed_amount'][self.id]
+            changes['tax_amount'] = amount['tax_amount'][self.id]
+            changes['total_amount'] = amount['total_amount'][self.id]
+        return changes
+
+    @fields.depends('quantity', 'unit_price', 'quantity', 'discount', 'tax',
+        'currency_digits', 'traffic_taxes')
+    def on_change_quantity(self):
+        changes = {}
+        if self.quantity:
+            amount = self.get_amount([self],
+                ['untaxed_amount', 'tax_amount', 'total_amount'])
+            changes['untaxed_amount'] = amount['untaxed_amount'][self.id]
+            changes['tax_amount'] = amount['tax_amount'][self.id]
+            changes['total_amount'] = amount['total_amount'][self.id]
+        return changes
+
+    @fields.depends('unit_price', 'unit_price', 'quantity', 'discount', 'tax',
+        'currency_digits', 'traffic_taxes')
+    def on_change_unit_price(self):
+        changes = {}
+        if self.quantity:
+            amount = self.get_amount([self],
+                ['untaxed_amount', 'tax_amount', 'total_amount'])
+            changes['untaxed_amount'] = amount['untaxed_amount'][self.id]
+            changes['tax_amount'] = amount['tax_amount'][self.id]
+            changes['total_amount'] = amount['total_amount'][self.id]
         return changes
 
     @classmethod
@@ -261,7 +314,7 @@ class Order(Workflow, ModelSQL, ModelView):
         for order in orders:
             unit_price = order.unit_price or Decimal(0)
             gross = (Decimal(str(order.quantity or 0.0)) * unit_price)
-            untaxed = gross - (order.discount * gross / 100)
+            untaxed = gross - ((order.discount or Decimal(0.0)) * gross / 100)
             if order.tax:
                 vals = Tax.compute([order.tax], untaxed, 1.0)
                 if vals:
@@ -271,12 +324,12 @@ class Order(Workflow, ModelSQL, ModelView):
             else:
                 val = {'amount': Decimal('0.0')}
             tax_amount[order.id] = Decimal(val['amount']).quantize(
-                    Decimal(str(10 ** - order.currency_digits)))
+                    Decimal(str(10 ** - (order.currency_digits or 0))))
             untaxed_amount[order.id] = Decimal(untaxed).quantize(
-                    Decimal(str(10 ** - order.currency_digits)))
+                    Decimal(str(10 ** - (order.currency_digits or 0))))
             total_amount[order.id] = Decimal(untaxed + val['amount'] + (
                     order.traffic_taxes or Decimal('0.0'))).quantize(
-                        Decimal(str(10 ** - order.currency_digits)))
+                        Decimal(str(10 ** - (order.currency_digits or 0))))
 
         result = {
             'untaxed_amount': untaxed_amount,
