@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- The COPYRIGHT file at the top level of this repository contains the full
      copyright notices and license terms. -->
-<tree string="Truck Orders" colors="If(Equal(Eval('state'), 'draft'), 'blue', (If(Bool(Eval('invoiced')), 'black', 'red')))">
+<tree string="Truck Orders" colors="If(Equal(Eval('state'), 'draft'), 'red', (If(Bool(Eval('invoiced')), 'black', 'blue')))">
     <field name="reference"/>
     <field name="party"/>
     <field name="order_date"/>
