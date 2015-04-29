@@ -126,6 +126,9 @@ class Order(Workflow, ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(Order, cls).__setup__()
+        cls._sql_constraints = [
+            ('reference_uniq', 'UNIQUE(reference)',
+                 'The References of the order must be unique.')]
         cls._order.insert(0, ('order_date', 'DESC'))
         cls._order.insert(1, ('id', 'DESC'))
         cls._error_messages.update({
