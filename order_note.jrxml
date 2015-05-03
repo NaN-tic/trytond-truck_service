@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_name" pageWidth="595" pageHeight="842" columnWidth="536" leftMargin="39" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a267cb3d-9d42-4a5d-a0ba-4cb5aa02ec6d">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="7"/>
+	<property name="ireport.y" value="0"/>
+	<property name="TRYTON_RELATIONS" value="[&apos;outgoing_moves&apos;]"/>
+	<style name="defecto" isDefault="true" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" vAlign="Middle" markup="none" pattern="" isBlankWhenNull="true" fontName="DejaVu Sans" fontSize="10"/>
+	<style name="textoscabecera" style="defecto" forecolor="#000000" backcolor="#CCFFCC" radius="10" isBold="true" pdfFontName="Helvetica-Bold">
+		<pen lineWidth="1.0" lineColor="#FF0066"/>
+	</style>
+	<style name="letramuy pequeña" style="defecto" forecolor="#000000" backcolor="#CCFFCC" radius="10" fontSize="8" isBold="false">
+		<pen lineWidth="1.0" lineColor="#FF0066"/>
+	</style>
+	<style name="totals" style="defecto" isBold="true" pdfFontName="Helvetica-Bold">
+		<box leftPadding="5" rightPadding="5">
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="table">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box leftPadding="0" rightPadding="0">
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box leftPadding="0" rightPadding="0">
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.0"/>
+			<bottomPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="address_rectangle">
+		<pen lineWidth="0.5" lineColor="#666666"/>
+	</style>
+	<style name="table_header" style="defecto" isBold="false" pdfFontName="Helvetica">
+		<box leftPadding="5" rightPadding="5"/>
+	</style>
+	<style name="table_detail" style="defecto" vAlign="Top">
+		<box leftPadding="5" rightPadding="5"/>
+	</style>
+	<subDataset name="outgoing_moves" uuid="58e9963a-52a7-4535-9c53-95d9e37375eb">
+		<parameter name="shipment_ID" class="java.lang.Long"/>
+		<parameter name="REWIND" class="java.lang.Object" isForPrompting="false">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+			<defaultValueExpression><![CDATA[$P{REPORT_DATA_SOURCE}.moveFirst()]]></defaultValueExpression>
+		</parameter>
+		<queryString language="xPath">
+			<![CDATA[]]>
+		</queryString>
+		<field name="shipment_id" class="java.lang.Long">
+			<fieldDescription><![CDATA[id]]></fieldDescription>
+		</field>
+		<field name="line_id" class="java.lang.Long">
+			<fieldDescription><![CDATA[outgoing_moves-outgoing_moves/id]]></fieldDescription>
+		</field>
+		<field name="lang" class="java.lang.String">
+			<fieldDescription><![CDATA[customer/lang/code]]></fieldDescription>
+		</field>
+		<field name="product_code" class="java.lang.String">
+			<fieldDescription><![CDATA[outgoing_moves-outgoing_moves/product-product/code-code]]></fieldDescription>
+		</field>
+		<field name="product_name" class="java.lang.String">
+			<fieldDescription><![CDATA[outgoing_moves/product-product/template-template/name-name]]></fieldDescription>
+		</field>
+		<field name="quantity" class="java.lang.Double">
+			<fieldDescription><![CDATA[outgoing_moves-outgoing_moves/quantity-quantity]]></fieldDescription>
+		</field>
+		<variable name="L" class="java.util.Locale">
+			<variableExpression><![CDATA[$F{lang} != null && $F{lang}.length() == 5 ? new Locale( $F{lang}.substring(0,2), $F{lang}.substring(3,5) ) : ( $F{lang} != null && $F{lang}.length() == 2 ? new Locale( $F{lang}.substring(0,2) ) : $P{REPORT_LOCALE} )]]></variableExpression>
+			<initialValueExpression><![CDATA[$F{lang} != null && $F{lang}.length() == 5 ? new Locale( $F{lang}.substring(0,2), $F{lang}.substring(3,5) ) : ( $F{lang} != null && $F{lang}.length() == 2 ? new Locale( $F{lang}.substring(0,2) ) : $P{REPORT_LOCALE} )]]></initialValueExpression>
+		</variable>
+		<filterExpression><![CDATA[$P{shipment_ID}  == $F{shipment_id}]]></filterExpression>
+	</subDataset>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HEADER_DS" class="java.lang.Object"/>
+	<parameter name="OUTGOING_MOVES_DS" class="java.lang.Object"/>
+	<queryString language="xPath">
+		<![CDATA[record]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[id-id]]></fieldDescription>
+	</field>
+	<field name="lang" class="java.lang.String">
+		<fieldDescription><![CDATA[customer/lang/code]]></fieldDescription>
+	</field>
+	<field name="shipment_name" class="java.lang.String">
+		<fieldDescription><![CDATA[code-code]]></fieldDescription>
+	</field>
+	<field name="planned_date" class="java.util.Date">
+		<fieldDescription><![CDATA[planned_date]]></fieldDescription>
+	</field>
+	<field name="effective_date" class="java.util.Date">
+		<fieldDescription><![CDATA[effective_date]]></fieldDescription>
+	</field>
+	<field name="party_name" class="java.lang.String">
+		<fieldDescription><![CDATA[customer/name]]></fieldDescription>
+	</field>
+	<field name="party_code" class="java.lang.String">
+		<fieldDescription><![CDATA[customer/code]]></fieldDescription>
+	</field>
+	<field name="party_vat" class="java.lang.String">
+		<fieldDescription><![CDATA[customer/vat_code]]></fieldDescription>
+	</field>
+	<field name="address_is_invoice" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[delivery_address/invoice]]></fieldDescription>
+	</field>
+	<field name="address_name" class="java.lang.String">
+		<fieldDescription><![CDATA[delivery_address/name]]></fieldDescription>
+	</field>
+	<field name="address_street" class="java.lang.String">
+		<fieldDescription><![CDATA[delivery_address/street]]></fieldDescription>
+	</field>
+	<field name="address_street2" class="java.lang.String">
+		<fieldDescription><![CDATA[delivery_address/streetbis]]></fieldDescription>
+	</field>
+	<field name="address_zip" class="java.lang.String">
+		<fieldDescription><![CDATA[delivery_address/zip]]></fieldDescription>
+	</field>
+	<field name="address_city" class="java.lang.String">
+		<fieldDescription><![CDATA[delivery_address/city]]></fieldDescription>
+	</field>
+	<field name="address_subdivision" class="java.lang.String">
+		<fieldDescription><![CDATA[delivery_address/subdivision/rec_name]]></fieldDescription>
+	</field>
+	<field name="address_country_code" class="java.lang.String">
+		<fieldDescription><![CDATA[delivery_address/country/code]]></fieldDescription>
+	</field>
+	<field name="address_country_name" class="java.lang.String">
+		<fieldDescription><![CDATA[delivery_address/country/rec_name]]></fieldDescription>
+	</field>
+	<field name="warehouse_name" class="java.lang.String">
+		<fieldDescription><![CDATA[warehouse/rec_name]]></fieldDescription>
+	</field>
+	<field name="company_footer1" class="java.lang.String">
+		<fieldDescription><![CDATA[company/footer]]></fieldDescription>
+	</field>
+	<variable name="L" class="java.util.Locale">
+		<variableExpression><![CDATA[$F{lang} != null && $F{lang}.length() == 5 ? new Locale( $F{lang}.substring(0,2), $F{lang}.substring(3,5) ) : ( $F{lang} != null && $F{lang}.length() == 2 ? new Locale( $F{lang}.substring(0,2) ) : $P{REPORT_LOCALE} )]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{lang} != null && $F{lang}.length() == 5 ? new Locale( $F{lang}.substring(0,2), $F{lang}.substring(3,5) ) : ( $F{lang} != null && $F{lang}.length() == 2 ? new Locale( $F{lang}.substring(0,2) ) : $P{REPORT_LOCALE} )]]></initialValueExpression>
+	</variable>
+	<group name="shipment" isStartNewPage="true" isResetPageNumber="true">
+		<groupExpression><![CDATA[$F{id}]]></groupExpression>
+		<groupHeader>
+			<band height="72">
+				<componentElement>
+					<reportElement key="table" style="table" x="0" y="0" width="536" height="32" uuid="f4bd644d-0091-4e32-9706-00ccbcbaea91">
+						<property name="TRYTON_RELATIONS" value="outgoing_moves"/>
+					</reportElement>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="outgoing_moves" uuid="55ee7c0a-d3f7-49fa-84ce-7eb8bc623aa5">
+							<datasetParameter name="shipment_ID">
+								<datasetParameterExpression><![CDATA[$F{id}]]></datasetParameterExpression>
+							</datasetParameter>
+							<dataSourceExpression><![CDATA[$P{OUTGOING_MOVES_DS}]]></dataSourceExpression>
+						</datasetRun>
+						<jr:column width="127" uuid="072936d3-5cc9-4f32-bc34-1624b2d7ad1f">
+							<jr:tableHeader style="table_TH" height="0" rowSpan="1">
+								<box>
+									<pen lineStyle="Solid"/>
+									<topPen lineStyle="Double"/>
+									<leftPen lineStyle="Solid"/>
+									<bottomPen lineStyle="Solid"/>
+									<rightPen lineStyle="Solid"/>
+								</box>
+							</jr:tableHeader>
+							<jr:tableFooter style="table_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+								<box>
+									<topPen lineWidth="0.5" lineStyle="Solid"/>
+								</box>
+								<textField pattern="">
+									<reportElement style="table_header" x="0" y="0" width="127" height="30" uuid="09e40026-4de4-46c6-85b3-382f16cdbf20"/>
+									<textElement>
+										<font size="8" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA[tr($V{L},"Code")]]></textFieldExpression>
+								</textField>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="table_TD" height="15" rowSpan="1">
+								<textField isStretchWithOverflow="true">
+									<reportElement style="table_detail" stretchType="RelativeToBandHeight" x="0" y="0" width="127" height="15" uuid="3733b959-f39a-4779-bc3f-d1f932793256"/>
+									<textElement verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="8"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{product_code}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="294" uuid="e89749af-5851-4325-b534-580fe80ccedd">
+							<jr:tableHeader style="table_TH" height="0" rowSpan="1"/>
+							<jr:tableFooter style="table_TH" height="0" rowSpan="1"/>
+							<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+								<textField pattern="">
+									<reportElement style="table_header" x="0" y="0" width="294" height="30" uuid="fc13dc72-65c9-4dc3-93ea-2f2a846b1256"/>
+									<textElement>
+										<font size="8" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA[tr($V{L},"Description")]]></textFieldExpression>
+								</textField>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="table_TD" height="15" rowSpan="1">
+								<textField isBlankWhenNull="true">
+									<reportElement style="table_detail" x="0" y="0" width="294" height="15" uuid="4f2559bb-3c0a-490c-83ef-b7354b914bf3"/>
+									<textElement verticalAlignment="Middle" markup="none">
+										<font fontName="DejaVu Sans" size="8" isBold="false" pdfFontName="Helvetica"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="108" uuid="1b42525d-1cae-4fc7-93e2-f9a1c5d6efae">
+							<jr:tableHeader style="table_TH" height="0" rowSpan="1"/>
+							<jr:tableFooter height="0" rowSpan="1"/>
+							<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+								<textField pattern="">
+									<reportElement style="table_header" x="0" y="0" width="107" height="30" uuid="49c47a4c-bbf8-4093-9e85-65ee36a862e1"/>
+									<textElement textAlignment="Right">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA[tr($V{L},"Quantity")]]></textFieldExpression>
+								</textField>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_CH" height="0" rowSpan="1"/>
+							<jr:detailCell style="table_TD" height="15" rowSpan="1">
+								<textField pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement style="table_detail" x="0" y="0" width="107" height="15" uuid="e0b5e940-5e4f-4a10-b63c-7fdf4f647e06"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+										<font fontName="DejaVu Sans" size="8" isBold="false" pdfFontName="Helvetica"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="18"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="134" splitType="Stretch">
+			<line>
+				<reportElement style="address_rectangle" x="516" y="11" width="1" height="15" forecolor="#666666" uuid="c8d50b7f-fb39-4df0-ac13-488b5e654747"/>
+				<graphicElement>
+					<pen lineColor="#666666"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement style="address_rectangle" x="226" y="10" width="16" height="1" forecolor="#666666" uuid="42a77dbb-60f1-44e6-8a97-221fa2aba958"/>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="230" y="40" width="285" height="14" uuid="fabb76a2-633f-45fa-8861-6a217f0b7e05"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{address_street} + ( $F{address_street2} != null && $F{address_street2} != "" ? "\n" + $F{address_street2} : "")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement style="address_rectangle" x="226" y="110" width="16" height="1" forecolor="#666666" uuid="de71453c-5009-459e-8475-1d9b1f6af12e"/>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="230" y="67" width="285" height="14" uuid="df2cc081-f8e8-4bd1-b552-bcdadba04166"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{address_country_code} == "ES" ? "" : $F{address_country_name}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement style="address_rectangle" x="226" y="10" width="1" height="15" forecolor="#666666" uuid="030974ac-d2ba-49c8-b932-fceb5e7c4610"/>
+			</line>
+			<textField>
+				<reportElement positionType="Float" x="230" y="54" width="285" height="14" uuid="40542f72-46b9-48da-93ac-f6350c43765d"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[($F{address_zip} != null ? $F{address_zip} + " " : "" ) +
+$F{address_city} +
+($F{address_subdivision} != null ? " " + $F{address_subdivision} : "" )]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement style="address_rectangle" x="226" y="96" width="1" height="15" forecolor="#666666" uuid="79f81687-974a-458f-aa72-ff9451a12edc"/>
+			</line>
+			<line>
+				<reportElement style="address_rectangle" x="500" y="11" width="16" height="1" forecolor="#666666" uuid="015db767-8547-4238-b05d-8cf6c79b8119"/>
+				<graphicElement>
+					<pen lineColor="#666666"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement style="address_rectangle" x="501" y="109" width="16" height="1" forecolor="#666666" uuid="c51ee415-2add-4601-805c-64abc651aa28"/>
+			</line>
+			<line>
+				<reportElement style="address_rectangle" x="517" y="95" width="1" height="15" forecolor="#666666" uuid="088486bb-b8c0-4ee7-82c5-a3a0e803c140"/>
+			</line>
+			<textField>
+				<reportElement x="230" y="27" width="285" height="14" uuid="06af8779-bfc4-4f0d-8eed-fe79851340ed"/>
+				<textElement verticalAlignment="Top">
+					<font isBold="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address_is_invoice} ? $F{party_name} : $F{address_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="230" y="80" width="285" height="14" uuid="88ae11b6-f135-48d6-9ad5-d204d3fa1a4a"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{party_vat} == null || $F{party_vat} == "" ? "" :
+tr($V{L}, "VAT: ") + $F{party_vat}.substring(0,2) + "-" + $F{party_vat}.substring(2)]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yy">
+				<reportElement x="61" y="62" width="65" height="20" uuid="fbbce970-adf4-4acb-8a1a-e8f78faec832"/>
+				<textElement textAlignment="Left">
+					<font size="14" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{planned_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="62" width="61" height="20" uuid="6ad90522-6095-4351-afd3-1ec238f1a0f1"/>
+				<textElement textAlignment="Left">
+					<font size="14" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[tr($V{L},"DATE: ")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="14" width="285" height="14" uuid="d302ab92-1862-4215-8284-a6847ea3a245"/>
+				<textElement verticalAlignment="Top">
+					<font isBold="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[tr($V{L},"CLIENT: ") + $F{party_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="11" width="226" height="46" uuid="b9cbb237-cffd-445a-9bd0-943b6b834c11"/>
+				<textElement>
+					<font size="14" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[tr($V{L},"Delivery Note")+": "+ $F{shipment_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="435" y="1" width="80" height="17" uuid="0b4fe94c-b417-4d56-94cf-b86c12979948"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + "/"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="1" width="18" height="17" uuid="36490c92-5f40-4939-9e2c-1548c7fe5f37"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="535" height="1" uuid="d684b4b2-9bf8-4149-b6fc-fc646e11271b"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

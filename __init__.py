@@ -21,3 +21,6 @@ def register():
         OrderInvoice,
         UpdateOrderInvoice,
         module='truck_service', type_='wizard')
+    Pool.register(
+        OrderNoteReport,
+        module='truck_service', type_='report')

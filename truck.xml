@@ -149,5 +149,21 @@
             <field name="model">truck.order,-1</field>
             <field name="action" ref="wizard_truck_order_invoice_update"/>
         </record>
+
+
+        <!-- Report -->
+        <record model="ir.action.report" id="report_truck_service_order_note">
+            <field name="name">Order Note</field>
+            <field name="model">truck.order</field>
+            <field name="report_name">truck.order.note.jasper</field>
+            <field name="report">truck_service/order_note.jrxml</field>
+            <field name="extension">pdf</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="report_truck_service_order_note_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">truck.order,-1</field>
+            <field name="action" ref="report_truck_service_order_note"/>
+        </record>
     </data>
 </tryton>

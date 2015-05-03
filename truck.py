@@ -12,9 +12,10 @@ from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.pyson import Eval, If, In
 from trytond.tools import reduce_ids
 from trytond.transaction import Transaction
+from trytond.modules.jasper_reports.jasper import JasperReport
 
 __all__ = ['Order', 'Invoice', 'InvoiceLine', 'OrderInvoice',
-    'ExistentInvoice', 'UpdateOrderInvoice']
+    'ExistentInvoice', 'UpdateOrderInvoice', 'OrderNoteReport']
 __metaclass__ = PoolMeta
 
 
@@ -647,3 +648,7 @@ class InvoiceLine:
         models = super(InvoiceLine, cls)._get_origin()
         models.append('truck.order')
         return models
+
+
+class OrderNoteReport(JasperReport):
+    __name__ = 'truck.order.note.jasper'
