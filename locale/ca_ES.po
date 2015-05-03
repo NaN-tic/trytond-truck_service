@@ -9,6 +9,10 @@ msgstr ""
 "\"%(vehicle)s\" ."
 
 msgctxt "error:truck.order:"
+msgid "The References of the order must be unique."
+msgstr "La referència ha de ser única"
+
+msgctxt "error:truck.order:"
 msgid "The order %s could not be invoiced because are not done."
 msgstr "L'albará %s no pot ser facturat perquè no està validat."
 
@@ -298,12 +302,16 @@ msgctxt "model:ir.action,name:act_truck_order"
 msgid "Truck Orders"
 msgstr "Albarans"
 
+msgctxt "model:ir.action,name:report_truck_service_order_note"
+msgid "Order Note"
+msgstr "Albará"
+
 msgctxt "model:ir.action,name:wizard_truck_order_invoice"
 msgid "Invoice"
 msgstr "Factura"
 
 msgctxt "model:ir.action,name:wizard_truck_order_invoice_update"
-msgid "Update Invoice"
+msgid "Update an Invoice"
 msgstr "Actualitzar factura"
 
 msgctxt "model:ir.action.act_window.domain,name:act_truck_order_domain_all"
