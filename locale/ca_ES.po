@@ -290,6 +290,10 @@ msgctxt "field:truck.order.invoice.existent,party:"
 msgid "Party"
 msgstr "Tercers"
 
+msgctxt "model:ir.action,name:act_invoice_form"
+msgid "Invoices"
+msgstr "Factures"
+
 msgctxt "model:ir.action,name:act_party_project"
 msgid "Party Projects"
 msgstr "Projectes tercer"
