@@ -151,6 +151,20 @@
         </record>
 
 
+        <!-- Related -->
+        <record model="ir.action.act_window" id="act_invoice_form">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="domain">[('lines.origin.id', 'in', Eval('active_ids'), Eval('active_model'))]</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="act_open_invoice_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">truck.order,-1</field>
+            <field name="action" ref="act_invoice_form"/>
+        </record>
+
+
         <!-- Report -->
         <record model="ir.action.report" id="report_truck_service_order_note">
             <field name="name">Order Note</field>
