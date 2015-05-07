@@ -463,6 +463,7 @@ class Order(Workflow, ModelSQL, ModelView):
 
         invoice.company = orders[0].company
         invoice.currency = orders[0].company.currency
+        invoice.reference = orders[0].reference
         invoice.type = 'out_invoice'
         invoice.party = orders[0].party
         for key, value in invoice.on_change_party().iteritems():
