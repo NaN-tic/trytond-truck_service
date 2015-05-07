@@ -425,9 +425,11 @@ class Order(Workflow, ModelSQL, ModelView):
             unit_price = order.unit_price or Decimal(0)
             invoice_line.gross_unit_price = (Decimal(
                     str(order.quantity or 0.0)) * unit_price)
-            invoice_line.discount = order.discount * Decimal('.01')
-            invoice_line.unit_price = invoice_line.update_prices()['unit_price']
-            invoice_line.traffic_taxes = order.traffic_taxes
+            invoice_line.discount = (
+                (order.discount or Decimal(0.0)) * Decimal('.01'))
+            invoice_line.unit_price = (
+                invoice_line.update_prices()['unit_price'])
+            invoice_line.traffic_taxes = order.traffic_taxes or Decimal(0.0)
             invoice_line.origin = order
 
             product = order.vehicle.product
@@ -615,7 +617,7 @@ class Invoice:
             sub_ids = [i.id for i in invoices[i:i + in_max]]
             red_sql = reduce_ids(line.invoice, sub_ids)
             cursor.execute(*line.select(line.invoice,
-                    Coalesce(Sum(line.traffic_taxes), 0),
+                    Coalesce(Sum(line.traffic_taxes or Decimal(0.0)), 0),
                     where=red_sql,
                     group_by=line.invoice))
             for invoice, amount in cursor.fetchall():
