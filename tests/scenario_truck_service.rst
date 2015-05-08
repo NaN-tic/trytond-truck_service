@@ -154,12 +154,13 @@ Create Employee::
 Create party::
 
     >>> Party = Model.get('party.party')
+    >>> Address = Model.get('party.address')
     >>> party = Party(name='Party')
     >>> address = party.addresses.new(invoice=True, sequence=10)
     >>> address = party.addresses.new(invoice=True, sequence=20)
     >>> party.save()
     >>> party.reload()
-    >>> invoice_address, alternate_address, _ = party.addresses
+    >>> invoice_address, alternate_address, delivery_address = party.addresses
 
 Create a project for the party::
 
@@ -206,15 +207,12 @@ Create payment term::
 Create a vehicle::
 
     >>> Asset = Model.get('asset')
-    >>> Vehicle = Model.get('asset.vehicle')
     >>> asset = Asset()
     >>> asset.product = product
     >>> asset.name = 'Vehicle'
+    >>> asset.type = 'vehicle'
+    >>> asset.driver = employee
     >>> asset.save()
-    >>> vehicle = Vehicle()
-    >>> vehicle.asset = asset
-    >>> vehicle.driver = employee
-    >>> vehicle.save()
 
 Configure sequences::
 
@@ -236,8 +234,9 @@ Create a truck order::
     >>> order.project = project
     >>> order.invoice_address == alternate_address
     True
+    >>> order.delivery_address = Address(delivery_address.id)
     >>> order.notes = 'Notes'
-    >>> order.vehicle = vehicle
+    >>> order.vehicle = asset
     >>> order.unit_price
     Decimal('10')
     >>> order.tax == tax
@@ -255,52 +254,39 @@ Check amounts::
     Decimal('2.00')
     >>> order.total_amount
     Decimal('22.00')
-    >>> order.various = Decimal('10.0')
-    >>> order.save()
-    >>> order.reload()
-    >>> order.untaxed_amount
-    Decimal('30.00')
-    >>> order.tax_amount
-    Decimal('3.00')
-    >>> order.total_amount
-    Decimal('33.00')
     >>> order.discount = Decimal('50.0')
     >>> order.traffic_taxes = Decimal('2.00')
     >>> order.save()
     >>> order.reload()
     >>> order.untaxed_amount
-    Decimal('15.00')
+    Decimal('10.00')
     >>> order.tax_amount
-    Decimal('1.50')
+    Decimal('1.00')
     >>> order.total_amount
-    Decimal('18.50')
+    Decimal('13.00')
 
 Create an invoice::
 
-    >>> order.click('confirm')
-    >>> order.start_time = datetime.datetime.now()
-    >>> order.click('process')
-    >>> order.end_time = datetime.datetime.now()
-    >>> order.click('recieve')
     >>> order.click('done')
+    >>> _ = Wizard('truck.order.invoice', [order])
     >>> invoice, = order.invoices
     >>> invoice.untaxed_amount
-    Decimal('15.00')
+    Decimal('10.00')
     >>> invoice.tax_amount
-    Decimal('1.50')
+    Decimal('1.00')
     >>> invoice.traffic_taxes_amount
     Decimal('2.0')
     >>> invoice.total_amount
-    Decimal('18.50')
+    Decimal('13.00')
     >>> line, = invoice.lines
     >>> line.gross_unit_price
-    Decimal('30.0000')
+    Decimal('20.0000')
     >>> line.discount
     Decimal('0.500')
     >>> line.traffic_taxes
     Decimal('2.00')
     >>> line.unit_price
-    Decimal('15.00000000')
+    Decimal('10.00000000')
     >>> line.quantity
     1.0
     >>> line.product == product

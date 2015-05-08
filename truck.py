@@ -62,7 +62,6 @@ class Order(Workflow, ModelSQL, ModelView):
         'Delivery Address', required=True,
         domain=[
             ('party', '=', Eval('party')),
-            ('delivery', '=', True),
             ],
         states=_STATES, depends=_DEPENDS + ['party'])
     order_date = fields.Date('Order Date', required=True, states=_STATES,
@@ -521,7 +520,6 @@ class Order(Workflow, ModelSQL, ModelView):
         for order in orders:
             if order.invoiced:
                 cls.raise_user_error('order_invoiced', (order.rec_name,))
-
 
     @classmethod
     @ModelView.button
