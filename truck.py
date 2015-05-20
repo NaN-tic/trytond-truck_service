@@ -41,11 +41,11 @@ class Order(Workflow, ModelSQL, ModelView):
         states=_STATES, depends=_DEPENDS)
     currency_digits = fields.Function(fields.Integer('Currency Digits'),
         'on_change_with_currency_digits')
-    code = fields.Char("Code", size=None, select=True, readonly=True)
+    code = fields.Char("Code", size=None, readonly=True)
     reference = fields.Char("Reference", size=None, select=True,
         states=_STATES, depends=_DEPENDS)
-    party = fields.Many2One('party.party', 'Customer', required=True,
-        states=_STATES, depends=_DEPENDS)
+    party = fields.Many2One('party.party', 'Customer', select=True,
+        required=True, states=_STATES, depends=_DEPENDS)
     project = fields.Many2One('party.project',
         'Project',
         domain=[
