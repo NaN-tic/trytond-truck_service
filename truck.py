@@ -390,7 +390,7 @@ class Order(Workflow, ModelSQL, ModelView):
         for order in orders:
             result[order.id] = False
         for line in lines:
-            invoice = line.invoice.id
+            invoice = line.invoice and line.invoice.id or None
             if invoice:
                 result[line.origin.id] = True
         return result
@@ -403,10 +403,26 @@ class Order(Workflow, ModelSQL, ModelView):
         order = cls.__table__()
         invoice_line = InvoiceLine.__table__()
 
-        query = order.join(invoice_line,
-            condition=(order.id == Cast(Substring(invoice_line.origin,
-                        Position(',', invoice_line.origin) + Literal(1)),
-                    InvoiceLine.id.sql_type().base))).select(order.id)
+        if clause[2]:
+            query = order.join(
+                invoice_line,
+                condition=(
+                    order.id == Cast(Substring(invoice_line.origin,
+                            Position(',', invoice_line.origin) + Literal(1)),
+                        cls.id.sql_type().base))
+                ).select(order.id)
+        else:
+            query = order.join(
+                invoice_line,
+                type_="LEFT",
+                condition=(
+                    order.id == Cast(Substring(invoice_line.origin,
+                            Position(',', invoice_line.origin) + Literal(1)),
+                        cls.id.sql_type().base))
+                ).select(
+                    order.id,
+                    where=(invoice_line.id == None)
+                    )
         return [('id', 'in', query)]
 
     @classmethod
