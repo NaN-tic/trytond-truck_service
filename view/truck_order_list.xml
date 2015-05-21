@@ -11,4 +11,5 @@
     <field name="driver"/>
     <field name="state"/>
     <field name="invoiced"/>
+    <field name="vehicle"/>
 </tree>
