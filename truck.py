@@ -460,6 +460,16 @@ class Order(Workflow, ModelSQL, ModelView):
                         'product': product.rec_name if product else '',
                         })
             invoice_line.taxes = [order.tax]
+            # Apply Tax Rule if customer has one
+            if order.party.customer_tax_rule:
+                tax_rule = order.party.customer_tax_rule
+                pattern = invoice_line._get_tax_rule_pattern()
+                taxes = []
+                for tax in invoice_line.taxes:
+                    tax_ids = tax_rule.apply(tax, pattern)
+                    if tax_ids:
+                        taxes.extend(tax_ids)
+                invoice_line.taxes = taxes
             invoice.lines = ((list(invoice.lines)
                     if hasattr(invoice, 'lines') else [])
                 + list([invoice_line]))
