@@ -524,6 +524,15 @@ class Order(Workflow, ModelSQL, ModelView):
         return super(Order, cls).create(vlist)
 
     @classmethod
+    def copy(cls, orders, default=None):
+        if default is None:
+            default = {}
+        default.setdefault('code')
+        default.setdefault('reference')
+        default.setdefault('invoice_lines', [])
+        return super(Order, cls).copy(orders, default)
+
+    @classmethod
     def delete(cls, orders):
         for order in orders:
             if order.state != 'draft':
