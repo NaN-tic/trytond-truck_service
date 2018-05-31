@@ -62,7 +62,6 @@ class Order(Workflow, ModelSQL, ModelView):
         'Delivery Address', required=True,
         domain=[
             ('party', '=', Eval('party')),
-            ('delivery', '=', True),
             ],
         states=_STATES, depends=_DEPENDS + ['party'])
     order_date = fields.Date('Order Date', required=True, states=_STATES,
